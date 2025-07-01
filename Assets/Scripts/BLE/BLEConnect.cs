@@ -106,36 +106,51 @@ public class BLEConnect : MonoBehaviour
 #if ENABLE_WINMD_SUPPORT
         try
         {
+            OnStatusUpdated?.Invoke($"Connecting to device ({address:X})...");
             connectedDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(address);
             if (connectedDevice != null)
             {
-                OnStatusUpdated?.Invoke($"Connected to: {connectedDevice.Name}");
-                
-                await CheckForTargetServiceAndCharacteristics();
+                string deviceName = connectedDevice.Name ?? "Unknown Device";
+                bool success = await CheckForTargetServiceAndCharacteristics();
+                if (success)
+                {
+                    OnStatusUpdated?.Invoke($"Connected to: {deviceName}");
+                }
+                else
+                {
+                    connectedDevice?.Dispose();
+                    connectedDevice = null;
+                    OnStatusUpdated?.Invoke("Failed to connect: Service or characteristics not found.");
+                }
             }
             else
             {
-                OnStatusUpdated?.Invoke("Failed to connect or connection dropped.");
+                OnStatusUpdated?.Invoke("Failed to connect: Device not found.");
             }
         }
         catch (Exception e)
         {
-            OnStatusUpdated?.Invoke($"Error while connecting: {e.Message}");
+            connectedDevice?.Dispose();
+            connectedDevice = null;
+            OnStatusUpdated?.Invoke($"Connection failed: {e.Message}");
         }
 #else
         OnStatusUpdated?.Invoke("BLE not supported on this platform.");
 #endif
     }
 
-    public void Disconnect()
+    public async void Disconnect()
     {
 #if ENABLE_WINMD_SUPPORT
-        if (connectedDevice == null)
-        {
-            OnStatusUpdated?.Invoke("No device connected.");
-            return;
-        }
+    if (connectedDevice == null)
+    {
+        OnStatusUpdated?.Invoke("No device connected.");
+        return;
+    }
 
+    OnStatusUpdated?.Invoke("Disconnecting...");
+    try
+    {
         // Unsubscribe from all characteristic notifications
         foreach (var (characteristic, handler) in subscribedCharacteristics)
         {
@@ -151,6 +166,12 @@ public class BLEConnect : MonoBehaviour
 
         OnStatusUpdated?.Invoke("Disconnected from device.");
         Debug.Log("BLE device disconnected and resources cleaned up.");
+    }
+    catch (Exception ex)
+    {
+        OnStatusUpdated?.Invoke($"Disconnect failed: {ex.Message}");
+        Debug.LogError($"Exception in Disconnect: {ex.Message}");
+    }
 #else
         OnStatusUpdated?.Invoke("Disconnect: BLE not supported on this platform.");
 #endif
@@ -169,7 +190,7 @@ public class BLEConnect : MonoBehaviour
         var manufacturerSections = args.Advertisement.ManufacturerData;
         if (manufacturerSections == null || manufacturerSections.Count == 0)
         {
-            Debug.Log($"No manufacturer data for device: {args.BluetoothAddress:X}");
+            //Debug.Log($"No manufacturer data for device: {args.BluetoothAddress:X}");
             return; // Skip devices without manufacturer data
         }
 
@@ -210,9 +231,11 @@ public class BLEConnect : MonoBehaviour
         }
         isScanning = false;
     }
+#endif
 
-    private async Task CheckForTargetServiceAndCharacteristics()
+    private async Task<bool> CheckForTargetServiceAndCharacteristics()
     {
+#if ENABLE_WINMD_SUPPORT
         GattDeviceServicesResult servicesResult = await connectedDevice.GetGattServicesAsync(BluetoothCacheMode.Uncached);
         if (servicesResult.Status == GattCommunicationStatus.Success)
         {
@@ -234,12 +257,18 @@ public class BLEConnect : MonoBehaviour
                                 await SubscribeToNotifications(characteristic);
                             }
                         }
+                        return true;
                     }
                 }
             }
         }
+        return false;
+#else
+        return false;
+#endif
     }
 
+#if ENABLE_WINMD_SUPPORT
     private async Task SubscribeToNotifications(GattCharacteristic characteristic)
     {
         GattCommunicationStatus notifyStatus = await characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(

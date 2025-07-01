@@ -97,8 +97,8 @@ public class LevelUIManager : MonoBehaviour
 
         if (inventoryManager != null)
         {
-            InventoryManager.OnItemAdded -= HandleItemAdded;
-            InventoryManager.OnItemRemoved -= HandleItemRemoved;
+            inventoryManager.OnItemAdded -= HandleItemAdded;
+            inventoryManager.OnItemRemoved -= HandleItemRemoved;
         }
 
         if (goalMarker != null)
@@ -157,8 +157,8 @@ public class LevelUIManager : MonoBehaviour
 
         if (inventoryManager != null)
         {
-            InventoryManager.OnItemAdded += HandleItemAdded;
-            InventoryManager.OnItemRemoved += HandleItemRemoved;
+            inventoryManager.OnItemAdded += HandleItemAdded;
+            inventoryManager.OnItemRemoved += HandleItemRemoved;
         }
 
         if (shieldPowerUp != null)

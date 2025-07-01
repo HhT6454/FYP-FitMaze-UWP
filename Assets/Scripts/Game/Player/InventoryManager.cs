@@ -7,8 +7,8 @@ public class InventoryManager : MonoBehaviour
 {
     private Dictionary<string, int> items = new Dictionary<string, int>(); // Tracks item types and counts
     private string[] nonInventoryItems = { "Shield", "Special" }; // Items that should not be added to inventory
-    public static event Action<string, int> OnItemAdded;
-    public static event Action<string, int> OnItemRemoved;
+    public event Action<string, int> OnItemAdded;
+    public event Action<string, int> OnItemRemoved;
     private LevelManager levelManager; // Reference to LevelManager for state checks
 
     private void Start()
