@@ -99,15 +99,19 @@ public class BLEUI : MonoBehaviour
 
     private void OnConnectButtonClicked()
     {
-        // Connect to the selected device
-        if (selectedDeviceAddress != 0)
-        {
-            bleConnect.ConnectToDevice(selectedDeviceAddress);
-        }
-        else
+        if (selectedDeviceAddress == 0)
         {
             statusText.text = "No device selected. Please select a device first.";
+            return;
         }
+
+        if (bleConnect.IsDeviceConnected())
+        {
+            statusText.text = "Can only connect to one device at a time.";
+            return;
+        }
+
+        bleConnect.ConnectToDevice(selectedDeviceAddress);
     }
 
     private void OnDisconnectButtonClicked()

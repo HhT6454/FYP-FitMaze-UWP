@@ -66,8 +66,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        //StartCoroutine(BeginCountdown()); // For testing without BLE connection
-        StartCoroutine(CheckBluetoothConnection());
+        StartCoroutine(BeginCountdown()); // For testing without BLE connection
+        //StartCoroutine(CheckBluetoothConnection());
     }
 
     private void OnDestroy()
@@ -149,6 +149,14 @@ public class LevelManager : MonoBehaviour
         {
             BLEManager.Instance.bleConnect.UpdateSensorStateOnBLE("start"); // Enable sensors after countdown
         }
+
+        // Reset the tracking to have first point at starting position
+        GPXMovementTracker tracker = FindAnyObjectByType<GPXMovementTracker>();
+        if (tracker != null)
+        {
+            tracker.ResetTracking();
+        }
+
         else
         {
             Debug.LogError("LevelManager: BLEManager or BLEConnect not found, sensors will not be started");
@@ -406,11 +414,6 @@ public class LevelManager : MonoBehaviour
             tracker.ResetTracking();
         }
 
-        //CurrentLevelState = LevelState.Playing;
-        //if (BLEManager.Instance != null && BLEManager.Instance.bleConnect != null)
-        //{
-        //    BLEManager.Instance.bleConnect.UpdateSensorStateOnBLE("start"); // Re-enable sensors
-        //}
         Debug.Log($"Level Restarted: {currentScene}");
     }
 

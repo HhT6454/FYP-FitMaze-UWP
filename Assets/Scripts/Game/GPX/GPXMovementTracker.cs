@@ -32,7 +32,7 @@ public class GPXMovementTracker : MonoBehaviour
         initialLatitude = GPXCoordinate.InitialLatitude;
         initialLongitude = GPXCoordinate.InitialLongitude;
 
-        ResetTracking(); // Always reset when the level starts
+        //ResetTracking(); // Always reset when the level starts
     }
 
     private void OnDestroy()
