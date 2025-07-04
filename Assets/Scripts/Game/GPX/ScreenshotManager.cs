@@ -185,8 +185,8 @@ public class ScreenshotManager : MonoBehaviour
             exif.SetTagValue(ExifTag.DateTimeOriginal, timestamp, StrCoding.Utf8);
             exif.SetTagValue(ExifTag.GpsLatitudeRef, latitude >= 0 ? "N" : "S", StrCoding.UsAscii);
             exif.SetTagValue(ExifTag.GpsLongitudeRef, longitude >= 0 ? "E" : "W", StrCoding.UsAscii);
-            GeoCoordinate latCoord = GeoCoordinate.FromDecimal((decimal)Math.Abs(latitude), true);
-            GeoCoordinate lonCoord = GeoCoordinate.FromDecimal((decimal)Math.Abs(longitude), false);
+            GeoCoordinate latCoord = GeoCoordinate.FromDecimal((decimal)latitude, true);
+            GeoCoordinate lonCoord = GeoCoordinate.FromDecimal((decimal)longitude, false);
             exif.SetGpsLatitude(latCoord);
             exif.SetGpsLongitude(lonCoord);
             exif.Save();

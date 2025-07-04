@@ -17,7 +17,7 @@ PlayerSettings:
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
-  m_ShowUnitySplashScreen: 1
+  m_ShowUnitySplashScreen: 0
   m_ShowUnitySplashLogo: 1
   m_SplashScreenOverlayOpacity: 1
   m_SplashScreenAnimation: 1
@@ -140,7 +140,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 0.1.15
+  bundleVersion: 1.1.0
   preloadedAssets:
   - {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   - {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}
@@ -870,9 +870,14 @@ PlayerSettings:
   metroCertificateNotAfter: 00520aae4607dd01
   metroApplicationDescription: Exercise Simulation Game
   wsaImages:
+    2031640: Assets/Resources/Logo/logo24x24.png
     2031716: Assets/Resources/Logo/logo44x44.png
+    2031816: Assets/Resources/Logo/logo88x88.png
+    2097352: Assets/Resources/Logo/logo142x142.png
     2162788: Assets/Resources/Logo/logo150x150.png
+    2162888: Assets/Resources/Logo/logo300x300.png
     2293860: Assets/Resources/Logo/logo310x150.png
+    2293960: Assets/Resources/Logo/logo620x300.png
   metroTileShortName: FitMaze
   metroTileShowName: 0
   metroMediumTileShowName: 0

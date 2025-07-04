@@ -66,8 +66,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(BeginCountdown()); // For testing without BLE connection
-        //StartCoroutine(CheckBluetoothConnection());
+        //StartCoroutine(BeginCountdown()); // For testing without BLE connection
+        StartCoroutine(CheckBluetoothConnection());
     }
 
     private void OnDestroy()
@@ -462,25 +462,24 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    private int CalculateTimeBonus(float elapsedTime)
+    {
+        float maxBonus = 1500f;
+        float cutoffTime = 900f; // 15 minutes
+
+        float bonus = maxBonus * Mathf.Clamp01(1f - elapsedTime / cutoffTime);
+        return Mathf.FloorToInt(bonus);
+    }
+
     public int CalculateFinalScore()
     {
         int baseScore = 1000;
         int dogBitePenalty = dogBiteCount * 50;
         int dogTamedBonus = dogTamedCount * 100;
-        int baseTimeScore = 500;
+
         float elapsedTime = timer != null ? timer.GetElapsedTime() : 0f;
-        float timeMultiplier;
+        int timeBonus = CalculateTimeBonus(elapsedTime);
 
-        if (elapsedTime < 180f) // 3 minutes
-            timeMultiplier = 3f;
-        else if (elapsedTime < 300f) // 5 minutes
-            timeMultiplier = 2f;
-        else if (elapsedTime < 600f) // 5 to 10 minutes
-            timeMultiplier = 1.5f;
-        else // > 10 minutes
-            timeMultiplier = 1f;
-
-        int timeBonus = Mathf.FloorToInt(baseTimeScore * timeMultiplier);
         int finalScore = baseScore - dogBitePenalty + dogTamedBonus + timeBonus + score;
 
         Debug.Log($"CalculateFinalScore: Base={baseScore}, Bites={dogBitePenalty}, Tamed={dogTamedBonus}, TimeBonus={timeBonus}, SpecialItems={score}, Final={finalScore}");

@@ -57,7 +57,7 @@ public static class GPXCoordinate
     {
         if (string.IsNullOrEmpty(name))
         {
-            name = $"Coord_{savedCoordinates.Count + 1}";
+            name = $"Coord{savedCoordinates.Count + 1}";
         }
 
         if (!savedCoordinates.Exists(c => c.latitude == latitude && c.longitude == longitude))
@@ -177,7 +177,7 @@ public static class GPXCoordinate
     public static void SetStepLength(float sliderValue)
     {
         StepLength = Mathf.Clamp(sliderValue / 100f, 0.65f, 0.80f);
-        PlayerPrefs.SetFloat(STEP_LENGTH_KEY, sliderValue); // Store slider value (65–80)
+        PlayerPrefs.SetFloat(STEP_LENGTH_KEY, sliderValue); // Store slider value (65-80)
         PlayerPrefs.Save();
         Debug.Log($"GPXCoordinate: Set step length to {StepLength}");
         OnSettingsChanged?.Invoke();
